@@ -1,5 +1,8 @@
 {
-    "name": "Home Assistant addons by Arne Gellhaus (topic2k's fork)",
+    "name": "Home Assistant addons by Arne Gellhaus (development version) (forked by env.DOCKER_HUB_USER)",
     "url": "https://github.com/topic2k/ha-plugins",
-    "maintainer": ["fork: topic2k", "origin: Arne Gellhaus"]
+    "maintainer": [
+        "fork: topic2k",
+        "origin: Arne Gellhaus"
+    ]
 }
