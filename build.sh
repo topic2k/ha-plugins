@@ -19,34 +19,23 @@ case "$1" in
             --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock:ro \
             homeassistant/amd64-builder:dev \
             --no-cache --aarch64 \
-            -t ha-sip -r $REPO_URL -b dev \
+            -t ha-sip-dev -r $REPO_URL -b dev \
             --docker-user "$DOCKER_HUB_USER" --docker-password "$DOCKER_HUB_PASSWORD"
         ;;
     build-dev)
         check_environment
         echo "Building on development branch (aarch64 only)..."
-        rm -rf $TMP_URL
-        git clone -b dev $REPO_URL $TMP_URL
-        REPO_JSON=$TMP_URL/repository.json
-        contents="$(jq --indent 4 '.name = "Home Assistant addons by Arne Gellhaus (development version) (forked by ${DOCKER_HUB_USER}"' $REPO_JSON)" && echo -E "${contents}" > $REPO_JSON
-        contents="$(jq --indent 4 '.url = env.REPO_URL' $REPO_JSON)" && echo -E "${contents}" > $REPO_JSON
-        CONFIG_JSON=$TMP_URL/ha-sip/config.json
-        contents="$(jq --indent 4 '.name = "ha-sip-dev"' $CONFIG_JSON)" && echo -E "${contents}" > $CONFIG_JSON
-        contents="$(jq --indent 4 '.slug = "ha-sip-dev"' $CONFIG_JSON)" && echo -E "${contents}" > $CONFIG_JSON
-        contents="$(jq --indent 4 '.url = env.REPO_URL' $CONFIG_JSON)" && echo -E "${contents}" > $CONFIG_JSON
-        contents="$(jq --indent 4 '.description = "Home-Assistant SIP Gateway (development version)"' $CONFIG_JSON)" && echo -E "${contents}" > $CONFIG_JSON
-        contents="$(jq --indent 4 '.image = '$DOCKER_HUB_USER'/aarch64-ha-sip-dev' $CONFIG_JSON)" && echo -E "${contents}" > $CONFIG_JSON
         if [ -z "$2" ]
           then
             echo "Don't overwrite version."
           else
             echo "Set version to $2"
             export OVERWRITE_VERSION=$2
+            CONFIG_JSON=config.json
             contents="$(jq --indent 4 '.version = env.OVERWRITE_VERSION' $CONFIG_JSON)" && echo -E "${contents}" > $CONFIG_JSON
+            git commit -a -m "Changes for development branch."
+            git push
         fi
-        cd $TMP_URL || exit
-        git commit -a -m "Changes for development branch."
-        git push --force
         docker run \
             --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock:ro \
             homeassistant/amd64-builder:dev \
