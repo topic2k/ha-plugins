@@ -28,7 +28,7 @@ case "$1" in
         rm -rf $TMP_URL
         git clone -b dev $REPO_URL $TMP_URL
         REPO_JSON=$TMP_URL/repository.json
-        contents="$(jq --indent 4 '.name = "Home Assistant addons by Arne Gellhaus (development version) (forked by env.DOCKER_HUB_USER)"' $REPO_JSON)" && echo -E "${contents}" > $REPO_JSON
+        contents="$(jq --indent 4 '.name = "Home Assistant addons by Arne Gellhaus (development version) (forked by ${DOCKER_HUB_USER}"' $REPO_JSON)" && echo -E "${contents}" > $REPO_JSON
         contents="$(jq --indent 4 '.url = env.REPO_URL' $REPO_JSON)" && echo -E "${contents}" > $REPO_JSON
         CONFIG_JSON=$TMP_URL/ha-sip/config.json
         contents="$(jq --indent 4 '.name = "ha-sip-dev"' $CONFIG_JSON)" && echo -E "${contents}" > $CONFIG_JSON
