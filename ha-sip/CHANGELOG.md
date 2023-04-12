@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.7
+
+- Added option to play a list of messages and/or audio files
+- Added option `repeat_playlist` to `post_action`: repeat whole playlist. `repeat_message` will repeat only the last item in case of a playlist.
+- Added option `repeat_wait` for an extra delay between repeated messages (in seconds).
+  ```yaml
+    menu:
+        playlist:
+            - type: tts
+              message: "Hello World!"
+            - type: audio_file
+              audio_file: "/config/audio/welcome.mp3"
+        post_action: "repeat_playlist"
+        repeat_wait: 2
+    ```
+
 ## 2.6
 - Call additional web-hooks for incoming and outgoing calls
 #### Deprecation notice: `webhook_to_call_after_call_was_established` will be removed in the next release and is replaced by the more granular `webhook_to_call`.
