@@ -13,6 +13,15 @@ function check_environment () {
 }
 
 case "$1" in
+    docker-dev)
+        check_environment
+        docker run \
+            --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock:ro \
+            homeassistant/amd64-builder:dev \
+            --no-cache --aarch64 \
+            -t ha-sip -r $REPO_URL -b dev \
+            --docker-user "$DOCKER_HUB_USER" --docker-password "$DOCKER_HUB_PASSWORD"
+        ;;
     build-dev)
         check_environment
         echo "Building on development branch (aarch64 only)..."
@@ -26,7 +35,7 @@ case "$1" in
         contents="$(jq --indent 4 '.slug = "ha-sip-dev"' $CONFIG_JSON)" && echo -E "${contents}" > $CONFIG_JSON
         contents="$(jq --indent 4 '.url = env.REPO_URL' $CONFIG_JSON)" && echo -E "${contents}" > $CONFIG_JSON
         contents="$(jq --indent 4 '.description = "Home-Assistant SIP Gateway (development version)"' $CONFIG_JSON)" && echo -E "${contents}" > $CONFIG_JSON
-        contents="$(jq --indent 4 '.image = env.DOCKER_HUB_USER/{arch}-ha-sip-dev"' $CONFIG_JSON)" && echo -E "${contents}" > $CONFIG_JSON
+        contents="$(jq --indent 4 '.image = '$DOCKER_HUB_USER'/aarch64-ha-sip-dev' $CONFIG_JSON)" && echo -E "${contents}" > $CONFIG_JSON
         if [ -z "$2" ]
           then
             echo "Don't overwrite version."
@@ -47,7 +56,7 @@ case "$1" in
         ;;
     build)
         check_environment
-        echo "Building prod (all archs)..."
+        echo "Building prod for all archs..."
         docker run \
             --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock:ro \
             homeassistant/amd64-builder:dev \
@@ -83,7 +92,7 @@ case "$1" in
         python setup.py install
         ;;
     *)
-        echo "Supply one of 'build-dev', 'build', 'test', 'update' or 'create-venv'"
+        echo "Supply one of 'docker-dev', 'build-dev', 'build', 'test', 'update' or 'create-venv'"
         exit 1
         ;;
 esac
