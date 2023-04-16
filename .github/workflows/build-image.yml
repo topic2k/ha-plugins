@@ -19,7 +19,7 @@ jobs:
       - uses: bbonkr/get-version-action@v1
         id: get_version
         with:
-          project: './ha-sip-dev/config.json'
+          project: './ha-sip/config.json'
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
