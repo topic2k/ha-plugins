@@ -11,6 +11,15 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        arch_from: [
+          aarch64: homeassistant/aarch64-base-debian:bullseye,
+          amd64: homeassistant/amd64-base-debian:bullseye,
+          armhf: homeassistant/armhf-base-debian:bullseye,
+          armv7: homeassistant/armv7-base-debian:bullseye,
+          i386: homeassistant/i386-base-debian:bullseye
+        ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,6 +45,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
+          build-contexts: homeassistant/aarch64-base-debian:bullseye
           context: ./ha-sip
           file: ./ha-sip/Dockerfile
           push: false
