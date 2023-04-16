@@ -36,8 +36,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          build-args:
-            - BUILD_FROM: homeassistant/aarch64-base-debian:bullseye
+          build-args: |
+            BUILD_FROM: homeassistant/aarch64-base-debian:bullseye
           context: ./ha-sip
           file: ./ha-sip/Dockerfile
           push: false
