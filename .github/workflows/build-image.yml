@@ -5,7 +5,7 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - ha-sip-dev/config.json
+      - ha-sip/config.json
       - README.md
       - .github/workflows/build-image.yml
 
@@ -37,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./ha-sip-dev
-          file: ./ha-sip-dev/Dockerfile
+          file: ./ha-sip/Dockerfile
           push: false
           #tags: |
           #  ${{ secrets.DOCKERHUB_USERNAME }}/aarch64-ha-sip-dev:${{ steps.get_version.outputs.version }}
